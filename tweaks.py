@@ -54,6 +54,8 @@ class Tweaks:  # pylint: disable=too-few-public-methods
         self.prefix = os.environ['STEAM_COMPAT_DATA_PATH'] + '/pfx/'
         self.env = {}
         self.commands = {}
+        if os.environ.get('PROTON_NO_TWEAKS') == '1':
+            return
         if appid in TWEAKS_DB:
             self.env = TWEAKS_DB[appid].get('env') or {}
             self.commands = TWEAKS_DB[appid].get('commands') or {}
