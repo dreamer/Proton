@@ -42,6 +42,13 @@ TWEAKS_DB = {
             r'.*jk2mp.exe$': ['+r_ignorehwgamma', '1'],
         }
     },
+    # Return to Castle Wolfenstein
+    '9010': {
+        'env': {
+            'MESA_EXTENSION_MAX_YEAR': '2003',
+            '__GL_ExtensionStringVersion': '17700',
+        }
+    },
 }
 
 
