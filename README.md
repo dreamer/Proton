@@ -33,17 +33,9 @@ The most current source for Proton is here:
 
 Which you can clone to your system with this command:
 
-       git clone https://github.com/ValveSoftware/Proton.git proton
+    git clone --recurse-submodules https://github.com/ValveSoftware/Proton.git proton
 
-After cloning the Proton git repository, the next step will be to
-obtain the various submodules that go into building Proton:
-
-        cd proton
-        #for linux:
-        git submodule update --init wine dxvk ffmpeg openal-soft openvr
-        #for macos:
-        git submodule update --init
-
+This command will automatically clone and init all submodules required to build Proton.
 If you wish to change any subcomponent, now is the time to do so.
 For example, if you wish make changes to Wine, you would apply those
 changes to the <tt>wine/</tt> directory.
@@ -116,10 +108,11 @@ The following example session obtained and built cmake:
       exit
 
 
-Finally, change your directory back to proton, and run:
+Finally, change your directory back to proton, point `STEAM_RUNTIME` env variable
+to directory with steam-runtime and run build script:
 
-        cd ../proton
-        ./build_proton.sh
+    cd ../proton
+    STEAM_RUNTIME=../steam-runtime ./build_proton.sh
 
 That should configure and build Wine, and then package the result up into
 <tt>dist/</tt>. It is important to examine the output near the end of
