@@ -67,7 +67,7 @@ class Tweaks:  # pylint: disable=too-few-public-methods
     """
 
     def __init__(self, appid):
-        self.prefix = os.environ['STEAM_COMPAT_DATA_PATH'] + '/pfx/'
+        self.prefix = os.path.join(os.environ['STEAM_COMPAT_DATA_PATH'], 'pfx')
         self.env = {}
         self.commands = {}
         self.conf_file = ''
