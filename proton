@@ -2,8 +2,6 @@
 
 #script to launch Wine with the correct environment
 
-from __future__ import print_function
-
 import filecmp
 import json
 import os
@@ -13,7 +11,7 @@ import subprocess
 import sys
 import tarfile
 
-from filelock import FileLock, Timeout
+from filelock import FileLock
 
 #To enable debug logging, copy "user_settings.sample.py" to "user_settings.py"
 #and edit it if needed.
@@ -57,12 +55,12 @@ def upgrade_pfx(old_ver):
 
     log("Upgrading prefix from " + str(old_ver) + " to " + CURRENT_PREFIX_VERSION + " (" + os.environ["STEAM_COMPAT_DATA_PATH"] + ")")
 
-    if old_ver == None:
+    if old_ver is None:
         return
 
     old_proton_ver, old_prefix_ver = old_ver.split('-')
     old_proton_maj, old_proton_min = old_proton_ver.split('.')
-    new_proton_ver, new_prefix_ver = CURRENT_PREFIX_VERSION.split('-')
+    new_proton_ver, new_prefix_ver = CURRENT_PREFIX_VERSION.split('-')  # pylint: disable=unused-variable
     new_proton_maj, new_proton_min = new_proton_ver.split('.')
 
     if int(new_proton_maj) < int(old_proton_maj) or \
@@ -101,7 +99,7 @@ def real_copy(src, dst):
 def mergedirs(src, dst, tracked_files):
     for src_dir, dirs, files in os.walk(src):
         rel_dir = src_dir.replace(src, "", 1).lstrip('/')
-        if len(rel_dir) > 0:
+        if rel_dir != '':
             rel_dir = rel_dir + "/"
         dst_dir = src_dir.replace(src, dst, 1)
         if not os.path.exists(dst_dir):
@@ -119,7 +117,7 @@ def mergedirs(src, dst, tracked_files):
                 real_copy(src_file, dst_file)
                 tracked_files.write(rel_dir + file_ + "\n")
 
-if not ("STEAM_COMPAT_DATA_PATH" in os.environ):
+if not "STEAM_COMPAT_DATA_PATH" in os.environ:
     log("No compat data path?")
     sys.exit(1)
 
@@ -178,9 +176,9 @@ if "PROTON_LOG" in env:
 #load environment overrides
 if os.path.exists(basedir + "/user_settings.py"):
     try:
-        import user_settings
+        import user_settings  # pylint: disable=import-error
         env.update(user_settings.user_settings)
-    except e:
+    except SyntaxError:
         log("************************************************")
         log("THERE IS AN ERROR IN YOUR user_settings.py FILE:")
         log("%s" % sys.exc_info()[1])
@@ -189,7 +187,7 @@ if os.path.exists(basedir + "/user_settings.py"):
 def check_environment(env_name, config_name):
     if not env_name in env:
         return False
-    if env[env_name] == "0" or len(env[env_name]) == 0:
+    if env[env_name] == "0" or env[env_name] == '':
         config_opts.discard(config_name)
     else:
         config_opts.add(config_name)
@@ -366,13 +364,8 @@ if "nod3d11" in config_opts:
     if "dxgi" in dlloverrides:
         del dlloverrides["dxgi"]
 
-s = ""
-for dll in dlloverrides:
-    setting = dlloverrides[dll]
-    if len(s) > 0:
-        s = s + ";" + dll + "=" + setting
-    else:
-        s = dll + "=" + setting
+s = ';'.join(f'{dll}={setting}' for dll, setting in dlloverrides.items())
+
 if "WINEDLLOVERRIDES" in os.environ:
     env["WINEDLLOVERRIDES"] = os.environ["WINEDLLOVERRIDES"] + ";" + s
 else:

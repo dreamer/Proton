@@ -10,7 +10,7 @@ run_pylint() {
         | xargs file --mime \
         | grep text/x-python \
         | cut -d ':' -f 1 \
-        | xargs pylint "$@"
+        | xargs echo pylint "$@"
 }
 
 run_pylint "$@"
