@@ -16,6 +16,19 @@ import shutil
 import subprocess
 import sys
 
+# potential:
+# Bioshock 2 Remastered
+# -nointro for  (supposedly works around "press enter" screen)
+# maybe it's possible to disable that screen but keep intro
+
+# Little Nightmares
+# -onethread
+
+# Titan Quest Anniversary Edition
+# set to winxp
+
+# EVE Online
+# set to winxp
 
 TWEAKS_DB = {
     # Call of Duty® (2003)
